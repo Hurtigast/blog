@@ -16,6 +16,12 @@ markdown_extensions:
   - pymdownx.superfences
   - pymdownx.tasklist:
       clickable_checkbox: true
+  - pymdownx.details
+  - pymdownx.critic
+  - pymdownx.caret
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.tilde
 
 
 theme:

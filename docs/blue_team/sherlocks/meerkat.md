@@ -165,7 +165,7 @@ $ tshark -r meerkat.pcap -Y 'http' -T fields -e 'urlencoded-form.value'|sort -u 
     | wc -l   | counts all lines        |
     | Note   | You can remove "\|wc -l" to see all credentials used in the attack        |
 
-However for some reason 57 is not the accepted answer, instead it's 56. Some speculate that it's because the original PoC uses the `install:install` credentials and thus are not counted in the original wordlist of 56. I don't have an answer to that, but I think 57 should be the correct answer since install:install were included in the bruteforce attack. 
+However 57 is not the correct answer, instead it's 56. That is because the `install:install` credentials are default credentials provided by the PoC and are thus not part of the credentials stuffing wordlist.
     
 Answer: **56**
 
@@ -249,6 +249,6 @@ Answer: **T1098.004**
 
 ## Final Thoughts
 
-Meerkat was a fun and educational introduction sherlock helping users to become more familiar with Wireshark and Tshark. Altough I still don't agree with the answer on Task 5. 
+Meerkat was a fun and educational introduction sherlock helping users to become more familiar with Wireshark and Tshark.
 
-If you can explain why 56 is indeed correct or have spotted any misstakes please contact me on my mail blog@hurtigare.com.
+If have any questions or have spotted any misstakes please contact me on my mail blog@hurtigare.com.

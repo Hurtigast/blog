@@ -4,3 +4,6 @@
 Hello, I'm Hurtigare and this is my blog regarding challenges and other topics I come across. 
 
 I'm based in Sweden and currently work in the IT-Security sphere. If you want to contact me, do so through email blog@hurtigare.com.
+
+The source code for the blog can be found at:  
+<https://github.com/Hurtigast/blog>

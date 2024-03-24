@@ -1,0 +1,38 @@
+site_name: Hurtigare
+site_author: Hurtigare blog@hurtigare.com
+
+plugins:
+  - tags
+  - autorefs
+  - autolinks
+  - search
+
+markdown_extensions:
+  - attr_list
+  - md_in_html
+  - admonition
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.superfences
+  - pymdownx.tasklist:
+      clickable_checkbox: true
+
+
+theme:
+  name: material
+  palette:
+    - scheme: slate
+      toggle:
+        icon: material/toggle-switch
+        name: Day time
+      primary: blue
+      accent: blue
+    - scheme: default
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: Night time
+      primary: blue
+      accent: blue  
+extra:
+  generator: false
+  logo: images/hurtigare_256px.png
